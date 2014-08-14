@@ -1,0 +1,26 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black" >
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="Calculator" 
+        android:textSize="40dp"
+        android:textColor="@android:color/white"/>
+
+      <TextView
+          android:id="@+id/subtitle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/title"
+          android:layout_centerHorizontal="true"
+          android:text="A Yatin Taluja Project"
+          android:textColor="@android:color/white"
+          android:textSize="20dp" />
+
+</RelativeLayout>
