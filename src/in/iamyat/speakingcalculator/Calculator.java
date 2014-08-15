@@ -1,7 +1,11 @@
 package in.iamyat.speakingcalculator;
 
+import java.util.Locale;
+
 import android.app.Activity;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.TextToSpeech.OnInitListener;
 import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,8 +13,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-public class Calculator extends Activity implements OnClickListener {
+public class Calculator extends Activity implements OnClickListener,
+		OnInitListener {
 
 	Button nine, eight, seven, six, five, four, three, two, one, zero, decimal,
 			add, subtract, divide, multiply, equal, clear;
@@ -19,10 +25,14 @@ public class Calculator extends Activity implements OnClickListener {
 	int operator2;
 	String operator;
 
+	private TextToSpeech tts;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_calculator);
+
+		tts = new TextToSpeech(this, this);
 
 		nine = (Button) findViewById(R.id.button9);
 		eight = (Button) findViewById(R.id.button8);
@@ -79,6 +89,7 @@ public class Calculator extends Activity implements OnClickListener {
 			}
 			str = str.append(zero.getText());
 			mEditText.setText(str);
+			voice();
 			break;
 		case R.id.button1:
 			if (operator2 != 0) {
@@ -87,6 +98,7 @@ public class Calculator extends Activity implements OnClickListener {
 			}
 			str = str.append(one.getText());
 			mEditText.setText(str);
+			voice();
 			break;
 		case R.id.button2:
 			if (operator2 != 0) {
@@ -95,6 +107,7 @@ public class Calculator extends Activity implements OnClickListener {
 			}
 			str = str.append(two.getText());
 			mEditText.setText(str);
+			voice();
 			break;
 		case R.id.button3:
 			if (operator2 != 0) {
@@ -103,6 +116,7 @@ public class Calculator extends Activity implements OnClickListener {
 			}
 			str = str.append(three.getText());
 			mEditText.setText(str);
+			voice();
 			break;
 		case R.id.button4:
 			if (operator2 != 0) {
@@ -111,6 +125,7 @@ public class Calculator extends Activity implements OnClickListener {
 			}
 			str = str.append(four.getText());
 			mEditText.setText(str);
+			voice();
 			break;
 		case R.id.button5:
 			if (operator2 != 0) {
@@ -119,6 +134,7 @@ public class Calculator extends Activity implements OnClickListener {
 			}
 			str = str.append(five.getText());
 			mEditText.setText(str);
+			voice();
 			break;
 		case R.id.button6:
 			if (operator2 != 0) {
@@ -127,6 +143,7 @@ public class Calculator extends Activity implements OnClickListener {
 			}
 			str = str.append(six.getText());
 			mEditText.setText(str);
+			voice();
 			break;
 		case R.id.button7:
 			if (operator2 != 0) {
@@ -135,6 +152,7 @@ public class Calculator extends Activity implements OnClickListener {
 			}
 			str = str.append(seven.getText());
 			mEditText.setText(str);
+			voice();
 			break;
 		case R.id.button8:
 			if (operator2 != 0) {
@@ -143,6 +161,7 @@ public class Calculator extends Activity implements OnClickListener {
 			}
 			str = str.append(eight.getText());
 			mEditText.setText(str);
+			voice();
 			break;
 		case R.id.button9:
 			if (operator2 != 0) {
@@ -151,6 +170,7 @@ public class Calculator extends Activity implements OnClickListener {
 			}
 			str = str.append(nine.getText());
 			mEditText.setText(str);
+			voice();
 			break;
 		case R.id.buttonAdd:
 			operator = "+";
@@ -166,6 +186,7 @@ public class Calculator extends Activity implements OnClickListener {
 				operator1 = operator1 + operator2;
 				mEditText.setText("Answer: " + Integer.toString(operator1));
 			}
+			voice();
 			break;
 		case R.id.buttonSubtract:
 			operator = "-";
@@ -181,6 +202,7 @@ public class Calculator extends Activity implements OnClickListener {
 				operator1 = operator1 - operator2;
 				mEditText.setText("Answer: " + Integer.toString(operator1));
 			}
+			voice();
 			break;
 		case R.id.buttonMultiply:
 			operator = "*";
@@ -196,6 +218,7 @@ public class Calculator extends Activity implements OnClickListener {
 				operator1 = operator1 * operator2;
 				mEditText.setText("Answer: " + Integer.toString(operator1));
 			}
+			voice();
 			break;
 		case R.id.buttonDivide:
 			operator = "/";
@@ -209,8 +232,9 @@ public class Calculator extends Activity implements OnClickListener {
 				operator2 = Integer.parseInt(mEditText.getText().toString());
 				mEditText.setText("");
 				operator1 = operator1 / operator2;
-				mEditText.setText( Integer.toString(operator1));
+				mEditText.setText(Integer.toString(operator1));
 			}
+			voice();
 			break;
 		case R.id.buttonEqual:
 			if (!operator.equals(null)) {
@@ -232,20 +256,33 @@ public class Calculator extends Activity implements OnClickListener {
 						mEditText.setText("Answer: "
 								+ Integer.toString(operator1));
 					}
-				}
-				else {
+				} else {
 					operation();
 				}
 			}
+			voice();
 			break;
 		case R.id.buttonClear:
 			operator1 = 0;
 			operator2 = 0;
 			mEditText.setText("");
 			mEditText.setHint("Enter Number");
+			voice();
 			break;
 		}
 
+	}
+
+	private void voice() {
+		String text = ((EditText) findViewById(R.id.displayNumber1))
+				.getText().toString();
+		if (tts != null) {
+			if (text != null) {
+				if (!tts.isSpeaking()) {
+					tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+				}
+			}
+		}
 	}
 
 	private void operation() {
@@ -289,5 +326,24 @@ public class Calculator extends Activity implements OnClickListener {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onInit(int code) {
+		if (code == TextToSpeech.SUCCESS) {
+			tts.setLanguage(Locale.getDefault());
+		} else {
+			tts = null;
+			Toast.makeText(this, "failed", Toast.LENGTH_LONG).show();
+		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		if (tts != null) {
+			tts.stop();
+			tts.shutdown();
+		}
+		super.onDestroy();
 	}
 }
