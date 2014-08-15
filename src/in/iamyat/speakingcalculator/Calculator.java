@@ -186,7 +186,10 @@ public class Calculator extends Activity implements OnClickListener,
 				operator1 = operator1 + operator2;
 				mEditText.setText("Answer: " + Integer.toString(operator1));
 			}
-			voice();
+			String textAdd = "Added to"
+					+ ((EditText) findViewById(R.id.displayNumber1)).getText()
+							.toString();
+			voiceOther(textAdd);
 			break;
 		case R.id.buttonSubtract:
 			operator = "-";
@@ -202,7 +205,10 @@ public class Calculator extends Activity implements OnClickListener,
 				operator1 = operator1 - operator2;
 				mEditText.setText("Answer: " + Integer.toString(operator1));
 			}
-			voice();
+			String textSubtract = "Subtracted by"
+					+ ((EditText) findViewById(R.id.displayNumber1)).getText()
+							.toString();
+			voiceOther(textSubtract);
 			break;
 		case R.id.buttonMultiply:
 			operator = "*";
@@ -218,7 +224,10 @@ public class Calculator extends Activity implements OnClickListener,
 				operator1 = operator1 * operator2;
 				mEditText.setText("Answer: " + Integer.toString(operator1));
 			}
-			voice();
+			String textMultiply = "Multiplied by"
+					+ ((EditText) findViewById(R.id.displayNumber1)).getText()
+							.toString();
+			voiceOther(textMultiply);
 			break;
 		case R.id.buttonDivide:
 			operator = "/";
@@ -234,7 +243,10 @@ public class Calculator extends Activity implements OnClickListener,
 				operator1 = operator1 / operator2;
 				mEditText.setText(Integer.toString(operator1));
 			}
-			voice();
+			String textDivide = "Divided by"
+					+ ((EditText) findViewById(R.id.displayNumber1)).getText()
+							.toString();
+			voiceOther(textDivide);
 			break;
 		case R.id.buttonEqual:
 			if (!operator.equals(null)) {
@@ -260,22 +272,24 @@ public class Calculator extends Activity implements OnClickListener,
 					operation();
 				}
 			}
-			voice();
+			String textEqual = "Equal to"
+					+ ((EditText) findViewById(R.id.displayNumber1)).getText()
+							.toString();
+			voiceOther(textEqual);
 			break;
 		case R.id.buttonClear:
 			operator1 = 0;
 			operator2 = 0;
 			mEditText.setText("");
 			mEditText.setHint("Enter Number");
-			voice();
+			String textClear = "Clear";
+			voiceOther(textClear);
 			break;
 		}
 
 	}
 
-	private void voice() {
-		String text = ((EditText) findViewById(R.id.displayNumber1))
-				.getText().toString();
+	private void voiceOther(String text) {
 		if (tts != null) {
 			if (text != null) {
 				if (!tts.isSpeaking()) {
@@ -283,6 +297,12 @@ public class Calculator extends Activity implements OnClickListener,
 				}
 			}
 		}
+	}
+
+	private void voice() {
+		String text = ((EditText) findViewById(R.id.displayNumber1)).getText()
+				.toString();
+		voiceOther(text);
 	}
 
 	private void operation() {
